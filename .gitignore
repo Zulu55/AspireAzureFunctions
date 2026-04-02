@@ -1,0 +1,24 @@
+## .NET
+bin/
+obj/
+*.user
+*.suo
+*.cache
+*.dll
+*.pdb
+
+## Azure Functions
+local.settings.json
+
+## IDE
+.vs/
+.vscode/
+*.swp
+*~
+
+## Azure Developer CLI
+.azure/
+
+## OS
+Thumbs.db
+.DS_Store

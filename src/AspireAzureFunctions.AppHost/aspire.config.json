@@ -1,0 +1,5 @@
+{
+  "appHost": {
+    "path": "AspireAzureFunctions.AppHost.csproj"
+  }
+}

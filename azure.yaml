@@ -1,0 +1,10 @@
+# Azure Developer CLI (azd) configuration for Aspire deployment
+name: aspire-azure-functions-poc
+metadata:
+  template: aspire-azure-functions-poc
+
+services:
+  app:
+    language: dotnet
+    project: ./src/AspireAzureFunctions.AppHost
+    host: containerapp

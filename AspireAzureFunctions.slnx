@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/AspireAzureFunctions.Api/AspireAzureFunctions.Api.csproj" />
+    <Project Path="src/AspireAzureFunctions.AppHost/AspireAzureFunctions.AppHost.csproj" />
+    <Project Path="src/AspireAzureFunctions.Functions/AspireAzureFunctions.Functions.csproj" />
+    <Project Path="src/AspireAzureFunctions.ServiceDefaults/AspireAzureFunctions.ServiceDefaults.csproj" />
+  </Folder>
+</Solution>
