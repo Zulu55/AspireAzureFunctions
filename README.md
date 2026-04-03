@@ -25,7 +25,7 @@ La solución implementa un sistema de **gestión de órdenes** que combina una M
 │      │    │   (https+http://)──────┼─────►│      │       │          │
 │      │    │                        │      │      │       │          │
 │  ┌───▼──┐ │  ┌──────────┐      ┌───▼───┐  │  ┌───▼────┐  │          │
-│  │Redis │ └──▶Queue Stg │      │Queue  │  │  │Blob    │  │          │
+│  │Redis │ └─▶│Queue Stg │      │Queue  │  │  │Blob    │  │          │
 │  │Cache │    │(enqueue) │      │Trigger│  │  │Storage │  │          │
 │  └──────┘    └──────────┘      └───────┘  │  └────────┘  │          │
 │      ▲                                    │              │          │
@@ -169,7 +169,7 @@ Esto inicia automáticamente:
 - **Azure Functions** en `http://localhost:7071`
 - **API** en `http://localhost:5000`
 
-## Probar
+## Probar en local
 
 ```bash
 # Crear una orden vía API
@@ -182,7 +182,7 @@ curl -X POST http://localhost:7071/api/orders \
   -H "Content-Type: application/json" \
   -d '{"productName":"Mouse","quantity":3,"customerEmail":"user@test.com"}'
 
-# Consultar estado de una orden (reemplazar {orderId})
+# Consultar estado de una orden (reemplazar {orderId} por el valor retornado)
 curl http://localhost:5000/api/orders/{orderId}
 
 # Health check de Functions vía service discovery
@@ -191,6 +191,8 @@ curl http://localhost:5000/api/functions-health
 # Dashboard del API (estado de componentes)
 curl http://localhost:5000/
 ```
+
+**Aspire Dashboard local**: `https://localhost:17180` — métricas, traces distribuidos y logs en tiempo real.
 
 ## Despliegue a Azure
 
@@ -203,6 +205,15 @@ azd init
 
 # Provisionar infraestructura y desplegar
 azd up
+
+# Solo redesplegar código (sin reprovisionar infraestructura)
+azd deploy
+
+# Ver logs en Azure
+azd monitor
+
+# Eliminar TODOS los recursos cuando termines (para no generar costos)
+azd down
 ```
 
 `azd` detecta automáticamente el AppHost de Aspire y provisiona:
@@ -211,6 +222,39 @@ azd up
 - **Azure Storage Account** (Queues + Blobs)
 - **Azure Cache for Redis**
 - **Azure Container Registry**
+
+## Probar en Azure
+
+URLs del despliegue:
+
+| Servicio | URL |
+|----------|-----|
+| **API** | https://api.wittydesert-ad083036.southcentralus.azurecontainerapps.io |
+| **Functions** | https://functions.wittydesert-ad083036.southcentralus.azurecontainerapps.io |
+| **Aspire Dashboard** | https://aspire-dashboard.ext.wittydesert-ad083036.southcentralus.azurecontainerapps.io |
+
+```bash
+# Crear una orden vía API
+curl -X POST https://api.wittydesert-ad083036.southcentralus.azurecontainerapps.io/api/orders \
+  -H "Content-Type: application/json" \
+  -d '{"productName":"Laptop","quantity":1,"customerEmail":"test@test.com"}'
+
+# Crear una orden vía Functions directamente
+curl -X POST https://functions.wittydesert-ad083036.southcentralus.azurecontainerapps.io/api/orders \
+  -H "Content-Type: application/json" \
+  -d '{"productName":"Mouse","quantity":3,"customerEmail":"user@test.com"}'
+
+# Consultar estado de una orden (reemplazar {orderId} por el valor retornado)
+curl https://api.wittydesert-ad083036.southcentralus.azurecontainerapps.io/api/orders/{orderId}
+
+# Health check de Functions vía service discovery
+curl https://api.wittydesert-ad083036.southcentralus.azurecontainerapps.io/api/functions-health
+
+# Dashboard del API (estado de componentes)
+curl https://api.wittydesert-ad083036.southcentralus.azurecontainerapps.io/
+```
+
+> **Nota**: Las URLs anteriores corresponden al despliegue actual. Si se reprovisiona la infraestructura con `azd up`, las URLs pueden cambiar. Usa `azd show` para consultar las URLs vigentes.
 
 ## Conceptos clave demostrados
 
