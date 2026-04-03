@@ -6,6 +6,8 @@ La solución implementa un sistema de **gestión de órdenes** que combina una M
 
 ## Arquitectura
 
+<img width="1024" height="1024" alt="image" src="https://github.com/user-attachments/assets/bc65f93f-2071-455f-86d2-7635d94b1dbf" />
+
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
 │                        Aspire AppHost                               │
