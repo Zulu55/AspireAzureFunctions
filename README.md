@@ -8,35 +8,6 @@ La solución implementa un sistema de **gestión de órdenes** que combina una M
 
 <img width="1024" height="1024" alt="image" src="https://github.com/user-attachments/assets/bc65f93f-2071-455f-86d2-7635d94b1dbf" />
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                        Aspire AppHost                               │
-│                   (Orquestador / Dashboard)                         │
-├────────────────────┬────────────────────────────────────────────────┤
-│                    │                                                │
-│   ┌────────────────▼───────────────┐  ┌────────────────────────┐    │
-│   │         API (Minimal API)      │  │    Azure Functions     │    │
-│   │         :5000                  │  │    :7071               │    │
-│   │                                │  │                        │    │
-│   │  POST /api/orders ─────────┐   │  │  POST /api/orders      │    │
-│   │  GET  /api/orders/{id}     │   │  │  GET  /api/orders/{id} │    │
-│   │  GET  /api/functions-health│   │  │  GET  /api/health      │    │
-│   │  GET  / (dashboard)        │   │  │  QueueTrigger: orders  │    │
-│   └──┬────┬────────────────────┘   │  └───┬──────┬───────┬─────┘    │
-│      │    │   service discovery    │      │      │       │          │
-│      │    │   (https+http://)──────┼─────►│      │       │          │
-│      │    │                        │      │      │       │          │
-│  ┌───▼──┐ │  ┌──────────┐      ┌───▼───┐  │  ┌───▼────┐  │          │
-│  │Redis │ └─▶│Queue Stg │      │Queue  │  │  │Blob    │  │          │
-│  │Cache │    │(enqueue) │      │Trigger│  │  │Storage │  │          │
-│  └──────┘    └──────────┘      └───────┘  │  └────────┘  │          │
-│      ▲                                    │              │          │
-│      └────────────────────────────────────┘              │          │
-│              (actualiza estado en Redis)                 │          │
-│              (guarda orden procesada) ◄──────────────────┘          │
-└─────────────────────────────────────────────────────────────────────┘
-```
-
 ## Flujo de procesamiento de órdenes
 
 El sistema implementa un patrón **command + async processor** donde la creación y el procesamiento de órdenes están desacoplados mediante una cola:
